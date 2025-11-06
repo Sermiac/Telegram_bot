@@ -258,12 +258,13 @@ async def procesar_cantidad(update: Update, context: ContextTypes.DEFAULT_TYPE):
         insumos_antes = hoja2.acell("H3").value
         liquidez_antes = hoja2.acell("H7").value
         
-        # Copiamos valores J3 → L3 y J7 → L7
+        # Copiamos valores
         valor_j3 = hoja2.acell("J3").value
         valor_j7 = hoja2.acell("J7").value
         valor_h3 = hoja2.acell("H3").value
         valor_h7 = hoja2.acell("H7").value
         
+        #   J3 → L3 y J7 → L7
         hoja2.update("L3", [[valor_j3]])
         hoja2.update("L7", [[valor_j7]])
         
@@ -282,7 +283,6 @@ async def procesar_cantidad(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text("✅ Datos guardados correctamente"
             "\n"
-            "Para Miguel\n"
             f"Insumos antes = {insumos_antes}\n"
             f"Liquidez antes = {liquidez_antes}\n"
             "\n"
