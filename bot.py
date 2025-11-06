@@ -27,6 +27,7 @@ load_dotenv("config.env")
 bot_token = os.getenv("BOT_TOKEN")
 sheet1_url = os.getenv("SHEET1_URL")
 sheet2_url = os.getenv("SHEET2_URL")
+group_id = os.getenv("GROUP_ID")
 
 if load_dotenv("config.env") == False:
     exit()
@@ -69,7 +70,7 @@ usuarios_modo_cuentas = {}
 cantidad_temp = {}
 producto_temp = {}  # Para guardar temporalmente el producto ingresado
 PRODUCTOS = "Lista: Camisetas, Mugs normales, Mugs metaliza, Camisetas Doble, Camiseta doble N, Camiseta negra, Camiseta niño, Lamina metali Peq, Chapa mascota, Cédula, Mugs color, Caramañola Gran, Mug Opalizado, Agenda, Mameluco"
-GRUPO_ID = -583298673
+GRUPO_ID = int(group_id)
 
 
 
