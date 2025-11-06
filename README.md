@@ -47,13 +47,13 @@ python3 bot.py
 
 Notifications are sent automatically to the group defined in GROUP_ID.
 
-Security
+## Security
 Do not commit .env or credentials.json to public repositories.
 
 Store all sensitive data in .env and include it in .gitignore.
 
-Contributing
+## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-License
+## License
 This project is open-source. See the LICENSE file for details.
