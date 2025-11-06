@@ -43,7 +43,7 @@ python3 bot.py
 <product_name> – Returns the price of a product.
 
 /cuentas Accounting mode.
-<product_name> <quantity> – Calculates prices based on ammount of products.
+<product_name> <quantity> – Calculates prices based on the ammount of products.
 
 Notifications are sent automatically to the group defined in GROUP_ID.
 
@@ -56,4 +56,4 @@ Store all sensitive data in .env and include it in .gitignore.
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
-This project is open-source. See the LICENSE file for details.
+This project is open-source.
