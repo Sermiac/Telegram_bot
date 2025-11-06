@@ -17,7 +17,7 @@ git clone https://github.com/Sermiac/telegram_bot.git
 cd telegram_bot
 ```
 
-Create a .env file:
+2. **Create a .env file:**
 ```bash
 BOT_TOKEN=your_telegram_bot_token
 GROUP_ID=your_telegram_group_id
@@ -25,22 +25,25 @@ SHEET1_URL=your_google_sheet_url_1
 SHEET2_URL=your_google_sheet_url_2
 ```
 
-Install dependencies (example for Python):
+3. **Install dependencies (example for Python):**
 ```bash
 pip install -r requirements.txt
 ```
 
-Run the bot:
+4. **Run the bot:**
 ```bash
 python3 bot.py
 ```
 
-Usage
-/list – Lists all products.
+## Usage
 
-/price <product_name> – Returns the price of a product.
+/start – Default mode.
 
-/total <product_name> <quantity> – Calculates total price.
+/precios – Prices mode.
+<product_name> – Returns the price of a product.
+
+/cuentas Accounting mode.
+<product_name> <quantity> – Calculates prices based on ammount of products.
 
 Notifications are sent automatically to the group defined in GROUP_ID.
 
