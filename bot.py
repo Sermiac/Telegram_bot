@@ -69,7 +69,7 @@ usuarios_modo_precios = {}
 usuarios_modo_cuentas = {}
 cantidad_temp = {}
 producto_temp = {}  # Para guardar temporalmente el producto ingresado
-PRODUCTOS = "Lista: Camisetas, Mugs normales, Mugs metaliza, Camisetas Doble, Camiseta doble N, Camiseta negra, Camiseta niño, Lamina metali Peq, Chapa mascota, Cédula, Mugs color, Caramañola Gran, Mug Opalizado, Agenda, Mameluco"
+PRODUCTOS = "List: Camisetas, Mugs normales, Mugs metaliza, Camisetas Doble, Camiseta doble N, Camiseta negra, Camiseta niño, Lamina metali Peq, Chapa mascota, Cédula, Mugs color, Caramañola Gran, Mug Opalizado, Agenda, Mameluco"
 GRUPO_ID = int(group_id)
 
 
@@ -80,7 +80,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Desactivamos el modo precios si el usuario vuelve a /start
     usuarios_modo_precios.pop(user_id, None)
     usuarios_modo_cuentas.pop(user_id, None)
-    await update.message.reply_text("👋 Hola, soy el bot que maneja las cuentas de GrafiCalamar")
+    await update.message.reply_text("👋 Hello,  thank you for contacting GrafiCalamar. Please, use: \n/precios if you want to know the price of an specific product or \n/cuentas if you want to place an order")
     (print(update.message.chat_id))
     
 
@@ -99,7 +99,7 @@ async def manejar_texto(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await buscar_producto(update, context)
     else:
         print(f"[DEBUG] Usuario {user_id} no está en ningún modo")
-        await update.message.reply_text("❌ Use /precios o /cuentas para cambiar de modo.")
+        await update.message.reply_text("Use /precios or /cuentas depending on what you want.")
 
 
 async def precios(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -107,7 +107,7 @@ async def precios(update: Update, context: ContextTypes.DEFAULT_TYPE):
     usuarios_modo_precios[user_id] = True  # Activamos modo menú para este usuario
     usuarios_modo_cuentas.pop(user_id, None)
 
-    await update.message.reply_text("Escriba el nombre del producto")
+    await update.message.reply_text("Type the product that you want to look for")
     await update.message.reply_text(PRODUCTOS)
 
 
@@ -131,11 +131,11 @@ async def buscar_producto(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 productos.append((data[fila][col], precios[col]))
 
     if productos:
-        respuesta = "📦 Resultados encontrados:\n"
+        respuesta = f"📦 Products matching {query}:\n"
         for nombre, precio in productos:
             respuesta += f"- {nombre}: {precio}\n"
     else:
-        respuesta = f"❌ El producto: {query} no se encontró en la base de datos, intentelo de nuevo"
+        respuesta = f"The product {query} was not found in our data base. Please, try again"
 
     await update.message.reply_text(respuesta)
 
@@ -144,7 +144,7 @@ async def cuentas(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     usuarios_modo_cuentas[user_id] = True  # Activamos modo cuentas
     usuarios_modo_cuentas[user_id] = "esperando_producto"  # Estado inicial
-    await update.message.reply_text("Escriba el nombre del producto")
+    await update.message.reply_text("Type the product you want to order")
 
 
 async def procesar_cantidad(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -152,7 +152,7 @@ async def procesar_cantidad(update: Update, context: ContextTypes.DEFAULT_TYPE):
     estado = usuarios_modo_cuentas.get(user_id)
 
     if not estado:
-        await update.message.reply_text("❌ Primero use /cuentas para iniciar.")
+        await update.message.reply_text("First you need to use /cuentas to start placing an order.")
         return
 
     texto = update.message.text.strip()
@@ -196,17 +196,17 @@ async def procesar_cantidad(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 break
 
         if not encontrado:
-            await update.message.reply_text(f"❌ No encontré el producto '{texto}'. Inténtelo de nuevo.")
+            await update.message.reply_text(f"The product '{texto}' was not found. Try again please")
             return
 
         usuarios_modo_cuentas[user_id] = "esperando_cantidad"
         nombre, celda_producto = producto_temp[user_id]
         await update.message.reply_text(
-            f"✅ Producto encontrado: *{nombre}*\n Si no es. Porfavor, vuelva al menu o escriba /cuentas",
+            f"✅ Product found: *{nombre}*\nIf it is not what you wanted, type or use /cuentas again",
             parse_mode="Markdown"
         )
 
-        await update.message.reply_text("¿Cuántos productos pidió el cliente?")
+        await update.message.reply_text(f"How many *{nombre}* do you want?", parse_mode="Markdown")
         return
 
     # ----------------------
@@ -214,7 +214,7 @@ async def procesar_cantidad(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # ----------------------
     if estado == "esperando_cantidad":
         if not texto.isdigit():
-            await update.message.reply_text("❌ Por favor ingrese un número válido.")
+            await update.message.reply_text("Please, type a number.")
             return
 
         cantidad = int(texto)
@@ -243,15 +243,16 @@ async def procesar_cantidad(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
         # Pasamos al estado de contraseña
         usuarios_modo_cuentas[user_id] = "esperando_contraseña"
-        await update.message.reply_text("🔑 Ingrese la contraseña para guardar datos TOTALES")
+        await update.message.reply_text(f"🔑 Order saved. \nProduct: *{nombre}* \nAmount: *{cantidad}* \ntype CONFIRM if you want to confirm the order",
+            parse_mode="Markdown")
         return
 
     # ----------------------
     # Paso 3: contraseña
     # ----------------------
     if estado == "esperando_contraseña":
-        if texto != "1234":
-            await update.message.reply_text("❌ Contraseña incorrecta. Intente de nuevo con /cuentas.")
+        if texto != "CONFIRM":
+            await update.message.reply_text("❌ Order cancelled. \nTry again typing /cuentas.")
             usuarios_modo_cuentas.pop(user_id, None)
             return
         #valores insumos y liquidez
@@ -283,11 +284,11 @@ async def procesar_cantidad(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text("✅ Datos guardados correctamente"
             "\n"
-            f"Insumos antes = {insumos_antes}\n"
-            f"Liquidez antes = {liquidez_antes}\n"
+            f"Sub Total before = {insumos_antes}\n"
+            f"Total before = {liquidez_antes}\n"
             "\n"
-            f"Insumos despues = {insumos_despues}\n"
-            f"Liquidez despues = {liquidez_despues}")
+            f"Sub Total after = {insumos_despues}\n"
+            f"Total after = {liquidez_despues}")
             
             
         #datos
